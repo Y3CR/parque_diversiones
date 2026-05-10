@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Bienvenido, {{ user.get_full_name|default:user.username }}</h1>
+</div>
+
+<div class="kpi-grid">
+    <div class="kpi-card" style="border-top-color: #1a237e;">
+        <div class="kpi-icon">🎢</div>
+        <div class="kpi-value">{{ total_atracciones }}</div>
+        <div class="kpi-label">Atracciones activas</div>
+    </div>
+    <div class="kpi-card" style="border-top-color: #2e7d32;">
+        <div class="kpi-icon">🎫</div>
+        <div class="kpi-value">{{ entradas_hoy }}</div>
+        <div class="kpi-label">Entradas hoy</div>
+    </div>
+    <div class="kpi-card" style="border-top-color: #ff6f00;">
+        <div class="kpi-icon">🔄</div>
+        <div class="kpi-value">{{ turnos_activos }}</div>
+        <div class="kpi-label">Turnos activos</div>
+    </div>
+    <div class="kpi-card" style="border-top-color: #6a1b9a;">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-value">{{ visitantes_hoy }}</div>
+        <div class="kpi-label">Visitantes hoy</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Acceso rápido</h2>
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem;">
+        {% if user.rol == 'administrador' or user.is_superuser %}
+            <a href="{% url 'atracciones:lista' %}" class="btn btn-primary">🎢 Atracciones</a>
+            <a href="{% url 'usuarios:lista_usuarios' %}" class="btn btn-secondary">👥 Usuarios</a>
+            <a href="{% url 'entradas:tipos' %}" class="btn btn-secondary">🎫 Tipos de entrada</a>
+            <a href="{% url 'reportes:dashboard' %}" class="btn btn-success">📊 Reportes</a>
+        {% elif user.rol == 'taquilla' %}
+            <a href="{% url 'entradas:vender' %}" class="btn btn-primary">🎫 Vender entrada</a>
+            <a href="{% url 'entradas:validar' %}" class="btn btn-success">✅ Validar entrada</a>
+            <a href="{% url 'entradas:lista_entradas' %}" class="btn btn-secondary">📋 Ver entradas</a>
+        {% elif user.rol == 'operador_atraccion' %}
+            <a href="{% url 'turnos:panel_operador' %}" class="btn btn-primary">🎡 Panel de turnos</a>
+            <a href="{% url 'atracciones:cambiar_estado' %}" class="btn btn-warning">⚙️ Estado atracción</a>
+        {% elif user.rol == 'soporte' %}
+            <a href="{% url 'usuarios:buscar_visitante' %}" class="btn btn-primary">🔍 Buscar visitante</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

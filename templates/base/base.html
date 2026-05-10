@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Parque de Diversiones{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; color: #333; }
+
+        .navbar {
+            background: #1a237e;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            height: 60px;
+        }
+        .navbar .brand { font-size: 1.2rem; font-weight: bold; }
+        .navbar a { color: white; text-decoration: none; margin-left: 1rem; font-size: 0.9rem; }
+
+        .sidebar {
+            width: 220px;
+            background: #283593;
+            min-height: calc(100vh - 60px);
+            position: fixed;
+            top: 60px; left: 0;
+            padding: 1.5rem 0;
+            overflow-y: auto;
+        }
+        .sidebar a {
+            display: block;
+            color: #c5cae9;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.88rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .sidebar a:hover { background: #3949ab; color: white; border-left-color: #ff6f00; }
+        .sidebar .section-title {
+            color: #7986cb;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            padding: 1rem 1.5rem 0.3rem;
+            letter-spacing: 1px;
+        }
+
+        .main-content {
+            margin-left: 220px;
+            padding: 2rem;
+            margin-top: 60px;
+            min-height: calc(100vh - 60px);
+        }
+        .main-content.full { margin-left: 0; }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .card h2 { margin-bottom: 1rem; color: #1a237e; font-size: 1.1rem; }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.88rem;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn-primary   { background: #1a237e; color: white; }
+        .btn-success   { background: #2e7d32; color: white; }
+        .btn-warning   { background: #ff6f00; color: white; }
+        .btn-danger    { background: #c62828; color: white; }
+        .btn-secondary { background: #546e7a; color: white; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .badge-success   { background: #e8f5e9; color: #2e7d32; }
+        .badge-warning   { background: #fff8e1; color: #e65100; }
+        .badge-danger    { background: #ffebee; color: #c62828; }
+        .badge-info      { background: #e3f2fd; color: #1565c0; }
+        .badge-secondary { background: #eceff1; color: #546e7a; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #e8eaf6; color: #1a237e; padding: 0.75rem; text-align: left; font-size: 0.85rem; }
+        td { padding: 0.75rem; border-bottom: 1px solid #f0f0f0; font-size: 0.88rem; }
+        tr:hover td { background: #fafafa; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: #555; font-weight: 500; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3949ab;
+            box-shadow: 0 0 0 2px rgba(57,73,171,0.15);
+        }
+
+        .alert {
+            padding: 0.8rem 1.2rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .alert-success { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #2e7d32; }
+        .alert-error   { background: #ffebee; color: #c62828; border-left: 4px solid #c62828; }
+        .alert-warning { background: #fff8e1; color: #e65100; border-left: 4px solid #ff6f00; }
+        .alert-info    { background: #e3f2fd; color: #1565c0; border-left: 4px solid #1565c0; }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .page-header h1 { font-size: 1.4rem; color: #1a237e; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .kpi-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 4px solid #1a237e;
+        }
+        .kpi-card .kpi-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+        .kpi-card .kpi-value { font-size: 2rem; font-weight: bold; color: #1a237e; }
+        .kpi-card .kpi-label { color: #888; font-size: 0.82rem; margin-top: 0.2rem; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav class="navbar">
+    <span class="brand">🎡 Parque de Diversiones</span>
+    <div>
+        {% if user.is_authenticated %}
+            <span style="font-size:0.85rem; margin-right:0.5rem;">
+                {{ user.get_full_name|default:user.username }}
+            </span>
+            <span style="background:#3949ab; padding:0.2rem 0.6rem; border-radius:3px; font-size:0.75rem; margin-right:1rem;">
+                {{ user.get_rol_display }}
+            </span>
+            <a href="{% url 'usuarios:logout' %}">Cerrar sesión</a>
+        {% endif %}
+    </div>
+</nav>
+
+{% if user.is_authenticated %}
+<div class="sidebar">
+    {% if user.rol == 'administrador' or user.is_superuser %}
+        <span class="section-title">Administración</span>
+        <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>
+        <a href="{% url 'usuarios:lista_usuarios' %}">👥 Usuarios</a>
+        <span class="section-title">Catálogos</span>
+        <a href="{% url 'atracciones:lista' %}">🎢 Atracciones</a>
+        <a href="{% url 'entradas:tipos' %}">🎫 Tipos de entrada</a>
+        <a href="{% url 'entradas:precios' %}">💰 Precios</a>
+        <a href="{% url 'entradas:promociones' %}">🏷️ Promociones</a>
+        <span class="section-title">Operación</span>
+        <a href="{% url 'turnos:panel_admin' %}">🔄 Turnos</a>
+        <a href="{% url 'entradas:lista_entradas' %}">📋 Entradas</a>
+        <span class="section-title">Reportes</span>
+        <a href="{% url 'reportes:dashboard' %}">📊 Dashboard</a>
+        <a href="{% url 'reportes:exportar' %}">📥 Exportar</a>
+    {% elif user.rol == 'taquilla' %}
+        <span class="section-title">Taquilla</span>
+        <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>
+        <a href="{% url 'entradas:vender' %}">🎫 Vender entrada</a>
+        <a href="{% url 'entradas:validar' %}">✅ Validar entrada</a>
+        <a href="{% url 'entradas:lista_entradas' %}">📋 Entradas del día</a>
+    {% elif user.rol == 'operador_atraccion' %}
+        <span class="section-title">Mi atracción</span>
+        <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>
+        <a href="{% url 'turnos:panel_operador' %}">🎡 Panel de turnos</a>
+        <a href="{% url 'atracciones:cambiar_estado' %}">⚙️ Estado atracción</a>
+    {% elif user.rol == 'operador_alimentos' %}
+        <span class="section-title">Alimentos</span>
+        <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>
+    {% elif user.rol == 'soporte' %}
+        <span class="section-title">Soporte</span>
+        <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>
+        <a href="{% url 'usuarios:buscar_visitante' %}">🔍 Buscar visitante</a>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="main-content {% if not user.is_authenticated %}full{% endif %}">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</div>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

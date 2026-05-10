@@ -1,0 +1,81 @@
+{% extends 'base/base.html' %}
+{% block title %}Buscar visitante{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🔍 Buscar visitante</h1>
+</div>
+
+<div class="card" style="max-width: 500px;">
+    <form method="get">
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="text" name="q" value="{{ query }}"
+                   placeholder="Celular o correo del visitante"
+                   style="flex: 1; padding: 0.6rem; border: 1px solid #ddd; border-radius: 5px;">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+</div>
+
+{% if query and not visitante %}
+    <div class="alert alert-warning">No se encontró ningún visitante con ese dato.</div>
+{% endif %}
+
+{% if visitante %}
+<div class="card">
+    <h2>{{ visitante.nombre }}</h2>
+    <p><strong>Celular:</strong> {{ visitante.celular }}</p>
+    <p><strong>Correo:</strong> {{ visitante.correo|default:"—" }}</p>
+    <p><strong>Registrado:</strong> {{ visitante.fecha_registro|date:"d/m/Y H:i" }}</p>
+</div>
+
+<div class="card">
+    <h2>🎫 Últimas entradas</h2>
+    <table>
+        <thead>
+            <tr><th>Código</th><th>Tipo</th><th>Estado</th><th>Fecha</th></tr>
+        </thead>
+        <tbody>
+            {% for e in entradas %}
+            <tr>
+                <td><code>{{ e.codigo_str }}</code></td>
+                <td>{{ e.tipo_entrada }}</td>
+                <td>
+                    <span class="badge
+                        {% if e.estado == 'activa' %}badge-success
+                        {% elif e.estado == 'usada' %}badge-secondary
+                        {% else %}badge-danger{% endif %}">
+                        {{ e.get_estado_display }}
+                    </span>
+                </td>
+                <td>{{ e.fecha_compra|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align:center; color:#888;">Sin entradas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>🔄 Últimos turnos</h2>
+    <table>
+        <thead>
+            <tr><th>#</th><th>Atracción</th><th>Estado</th><th>Hora creación</th></tr>
+        </thead>
+        <tbody>
+            {% for t in turnos %}
+            <tr>
+                <td><strong>#{{ t.numero }}</strong></td>
+                <td>{{ t.atraccion.nombre }}</td>
+                <td><span class="badge badge-info">{{ t.get_estado_display }}</span></td>
+                <td>{{ t.hora_creacion|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align:center; color:#888;">Sin turnos registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

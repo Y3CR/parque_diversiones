@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+{% block title %}{% if object %}Editar{% else %}Nuevo{% endif %} usuario{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{% if object %}✏️ Editar usuario{% else %}➕ Nuevo usuario{% endif %}</h1>
+    <a href="{% url 'usuarios:lista_usuarios' %}" class="btn btn-secondary">← Volver</a>
+</div>
+
+<div class="card" style="max-width: 520px;">
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Nombre *</label>
+                <input type="text" name="first_name" value="{{ object.first_name|default:'' }}" required>
+            </div>
+            <div class="form-group">
+                <label>Apellido</label>
+                <input type="text" name="last_name" value="{{ object.last_name|default:'' }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Nombre de usuario *</label>
+            <input type="text" name="username" value="{{ object.username|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="email" value="{{ object.email|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label>Rol *</label>
+            <select name="rol">
+                {% for val, label in roles %}
+                    <option value="{{ val }}"
+                        {% if object.rol == val %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if not object %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Contraseña *</label>
+                <input type="password" name="password1" required>
+            </div>
+            <div class="form-group">
+                <label>Confirmar contraseña *</label>
+                <input type="password" name="password2" required>
+            </div>
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="activo"
+                    {% if object.activo or not object %}checked{% endif %}
+                    style="width: auto;">
+                Usuario activo
+            </label>
+        </div>
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+            <button type="submit" class="btn btn-primary">
+                {% if object %}Guardar cambios{% else %}Crear usuario{% endif %}
+            </button>
+            <a href="{% url 'usuarios:lista_usuarios' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
