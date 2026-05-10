@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% block title %}Comprobante{% endblock %}
+{% block content %}
+<div style="max-width:480px; margin:0 auto;">
+    <div class="card" style="text-align:center;">
+        <div style="font-size:3rem; margin-bottom:0.5rem;">✅</div>
+        <h2 style="color:#2e7d32; margin-bottom:0.5rem;">¡Compra exitosa!</h2>
+        <p style="color:#888; margin-bottom:1.5rem;">Guarda tu código de acceso al parque</p>
+
+        <div style="background:#e8eaf6; padding:1.5rem; border-radius:10px; margin-bottom:1.5rem;">
+            <div style="font-family:monospace; font-size:2rem; font-weight:bold;
+                        color:#1a237e; letter-spacing:4px;">
+                {{ entrada.codigo_str }}
+            </div>
+            <div style="color:#888; font-size:0.82rem; margin-top:0.3rem;">Código de acceso</div>
+        </div>
+
+        <table style="text-align:left; margin-bottom:1.5rem;">
+            <tr><td style="padding:0.4rem; color:#888;">Visitante</td>
+                <td style="padding:0.4rem;"><strong>{{ entrada.visitante.nombre }}</strong></td></tr>
+            <tr><td style="padding:0.4rem; color:#888;">Tipo</td>
+                <td style="padding:0.4rem;">{{ entrada.tipo_entrada }}</td></tr>
+            <tr><td style="padding:0.4rem; color:#888;">Valor</td>
+                <td style="padding:0.4rem;"><strong>${{ entrada.precio_pagado|floatformat:0 }}</strong></td></tr>
+            <tr><td style="padding:0.4rem; color:#888;">Fecha</td>
+                <td style="padding:0.4rem;">{{ entrada.fecha_compra|date:"d/m/Y H:i" }}</td></tr>
+        </table>
+
+        <p style="color:#888; font-size:0.85rem;">
+            Presenta este código en la entrada del parque.
+        </p>
+
+        <div style="margin-top:1.5rem;">
+            <a href="{% url 'entradas:compra_web' %}" class="btn btn-primary">Comprar otra entrada</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

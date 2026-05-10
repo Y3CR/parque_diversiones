@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+{% block title %}Comprar entrada{% endblock %}
+{% block content %}
+<div style="max-width:600px; margin:0 auto;">
+    <h1 style="margin-bottom:1.5rem; color:#1a237e; text-align:center;">🎡 Comprar entrada</h1>
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="card">
+            <h2>Selecciona tu tipo de entrada</h2>
+            {% for tipo in tipos %}
+                {% with datos=precios|default_if_none:'' %}
+                {% endwith %}
+                <label style="display:flex; justify-content:space-between; align-items:center;
+                              padding:0.75rem; border:1px solid #ddd; border-radius:8px;
+                              margin-bottom:0.5rem; cursor:pointer;">
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <input type="radio" name="tipo_entrada" value="{{ tipo.pk }}" required style="width:auto;">
+                        <div>
+                            <strong>{{ tipo.nombre }}</strong>
+                            {% if tipo.descripcion %}
+                                <div style="color:#888; font-size:0.82rem;">{{ tipo.descripcion }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        {% for pk, datos in precios.items %}
+                            {% if pk == tipo.pk %}
+                                {% if datos.promo %}
+                                    <div style="font-size:0.8rem; color:#888; text-decoration:line-through;">
+                                        ${{ datos.original|floatformat:0 }}
+                                    </div>
+                                    <div style="color:#2e7d32; font-size:0.8rem;">
+                                        🏷️ {{ datos.promo.nombre }}
+                                    </div>
+                                {% endif %}
+                                <strong style="color:#1a237e;">${{ datos.valor|floatformat:0 }}</strong>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </label>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h2>Tus datos</h2>
+            <div class="form-group">
+                <label>Nombre completo *</label>
+                <input type="text" name="nombre" required placeholder="Tu nombre completo">
+            </div>
+            <div class="form-group">
+                <label>Celular *</label>
+                <input type="text" name="celular" required placeholder="Tu número de celular">
+            </div>
+            <div class="form-group">
+                <label>Correo electrónico</label>
+                <input type="email" name="correo" placeholder="Tu correo (opcional)">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success"
+                style="width:100%; padding:0.9rem; font-size:1rem;">
+            Comprar entrada
+        </button>
+    </form>
+</div>
+{% endblock %}

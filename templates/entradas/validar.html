@@ -1,0 +1,44 @@
+{% extends 'base/base.html' %}
+{% block title %}Validar entrada{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>✅ Validar entrada</h1>
+</div>
+
+<div class="card" style="max-width:500px;">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Código QR o alfanumérico</label>
+            <input type="text" name="codigo" value="{{ codigo }}"
+                   autofocus required
+                   placeholder="Escanea o digita el código"
+                   style="font-family:monospace; font-size:1rem; text-transform:uppercase;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Verificar</button>
+    </form>
+</div>
+
+{% if entrada %}
+<div class="card" style="max-width:500px; border-left:4px solid #2e7d32;">
+    <h2 style="color:#2e7d32;">✅ Entrada válida</h2>
+    <p><strong>Visitante:</strong> {{ entrada.visitante.nombre }}</p>
+    <p><strong>Celular:</strong> {{ entrada.visitante.celular }}</p>
+    <p><strong>Tipo:</strong> {{ entrada.tipo_entrada }}</p>
+    <p><strong>Valor pagado:</strong> ${{ entrada.precio_pagado|floatformat:0 }}</p>
+    <p><strong>Canal:</strong> {{ entrada.get_canal_venta_display }}</p>
+    <p><strong>Código:</strong> <code>{{ entrada.codigo_str }}</code></p>
+    <div style="margin-top:1rem;">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="codigo" value="{{ entrada.codigo_validacion }}">
+            <input type="hidden" name="confirmar_uso" value="1">
+            <button type="submit" class="btn btn-success" style="margin-right:0.5rem;">
+                ✅ Confirmar ingreso
+            </button>
+            <a href="{% url 'entradas:validar' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

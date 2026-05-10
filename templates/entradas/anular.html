@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+{% block title %}Anular entrada{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>🚫 Anular entrada</h1>
+    <a href="{% url 'entradas:lista_entradas' %}" class="btn btn-secondary">← Volver</a>
+</div>
+<div class="card" style="max-width:480px;">
+    <div class="alert alert-warning">
+        ⚠️ Esta acción es irreversible. La entrada quedará registrada como anulada con tu usuario, fecha, hora y motivo.
+    </div>
+    <p><strong>Visitante:</strong> {{ entrada.visitante.nombre }}</p>
+    <p><strong>Código:</strong> <code>{{ entrada.codigo_str }}</code></p>
+    <p><strong>Tipo:</strong> {{ entrada.tipo_entrada }}</p>
+    <p style="margin-bottom:1rem;"><strong>Valor:</strong> ${{ entrada.precio_pagado|floatformat:0 }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Motivo de anulación *</label>
+            <textarea name="motivo" rows="3" required
+                      placeholder="Describe el motivo de la anulación"></textarea>
+        </div>
+        <div style="display:flex; gap:0.75rem;">
+            <button type="submit" class="btn btn-danger">Confirmar anulación</button>
+            <a href="{% url 'entradas:lista_entradas' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

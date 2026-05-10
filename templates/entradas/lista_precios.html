@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% block title %}Precios{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>💰 Historial de precios</h1>
+    <a href="{% url 'entradas:crear_precio' %}" class="btn btn-primary">+ Nuevo precio</a>
+</div>
+<div class="alert alert-info">
+    📋 Cada precio nuevo queda registrado con el valor anterior para auditoría. Los precios no se sobrescriben.
+</div>
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo de entrada</th>
+                <th>Canal</th>
+                <th>Valor</th>
+                <th>Valor anterior</th>
+                <th>Vigencia desde</th>
+                <th>Vigencia hasta</th>
+                <th>Modificado por</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in precios %}
+            <tr>
+                <td>{{ p.tipo_entrada.nombre }}</td>
+                <td><span class="badge badge-info">{{ p.get_canal_display }}</span></td>
+                <td><strong>${{ p.valor|floatformat:0 }}</strong></td>
+                <td>
+                    {% if p.valor_anterior %}
+                        <span style="color:#888; text-decoration:line-through;">
+                            ${{ p.valor_anterior|floatformat:0 }}
+                        </span>
+                    {% else %}—{% endif %}
+                </td>
+                <td>{{ p.vigencia_desde }}</td>
+                <td>{{ p.vigencia_hasta|default:"Sin vencimiento" }}</td>
+                <td>{{ p.usuario_modifico.username|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center;color:#888;padding:2rem;">Sin precios registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

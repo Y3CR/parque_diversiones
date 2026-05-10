@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %}
+{% block title %}Vender entrada{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>🎫 Vender entrada</h1>
+    <a href="{% url 'entradas:lista_entradas' %}" class="btn btn-secondary">📋 Ver entradas del día</a>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+    <div class="card">
+        <h2>Paso 1 — Seleccionar tipo</h2>
+        <form method="get">
+            <div class="form-group">
+                <label>Tipo de entrada</label>
+                <select name="tipo" onchange="this.form.submit()">
+                    <option value="">Selecciona un tipo</option>
+                    {% for t in tipos %}
+                        <option value="{{ t.pk }}"
+                            {% if tipo_sel.pk == t.pk %}selected{% endif %}>
+                            {{ t.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+        {% if tipo_sel %}
+        <div style="background:#e8f5e9; padding:1rem; border-radius:8px; margin-top:1rem;">
+            <strong>{{ tipo_sel.nombre }}</strong><br>
+            {% if promo_sel %}
+                <span style="color:#888; text-decoration:line-through; font-size:0.85rem;">
+                    Precio original disponible
+                </span><br>
+                <span style="color:#2e7d32; font-size:0.85rem;">
+                    🏷️ Promoción: {{ promo_sel.nombre }} ({{ promo_sel.descuento_porcentaje }}% off)
+                </span><br>
+            {% endif %}
+            <strong style="font-size:1.3rem; color:#1a237e;">
+                ${{ precio_calculado|floatformat:0 }}
+            </strong>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if tipo_sel and precio_calculado %}
+    <div class="card">
+        <h2>Paso 2 — Datos del visitante</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="tipo_entrada" value="{{ tipo_sel.pk }}">
+            <div class="form-group">
+                <label>Nombre completo *</label>
+                <input type="text" name="nombre_visitante" required placeholder="Nombre del visitante">
+            </div>
+            <div class="form-group">
+                <label>Celular *</label>
+                <input type="text" name="celular" required placeholder="Número de celular">
+            </div>
+            <button type="submit" class="btn btn-success" style="width:100%; padding:0.75rem;">
+                💳 Registrar venta — ${{ precio_calculado|floatformat:0 }}
+            </button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
