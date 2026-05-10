@@ -1,0 +1,45 @@
+{% extends 'base/base.html' %}
+{% block title %}Categorías{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🏷️ Categorías de atracciones</h1>
+    <div style="display:flex; gap:0.5rem;">
+        <a href="{% url 'atracciones:lista' %}" class="btn btn-secondary">← Atracciones</a>
+        <a href="{% url 'atracciones:crear_categoria' %}" class="btn btn-primary">+ Nueva categoría</a>
+    </div>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Atracciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in categorias %}
+            <tr>
+                <td><strong>{{ c.nombre }}</strong></td>
+                <td>{{ c.descripcion|default:"—" }}</td>
+                <td>{{ c.atraccion_set.count }}</td>
+                <td>
+                    <a href="{% url 'atracciones:editar_categoria' c.pk %}"
+                       class="btn btn-warning"
+                       style="padding:0.3rem 0.7rem; font-size:0.8rem;">Editar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center; color:#888; padding:2rem;">
+                    No hay categorías registradas.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

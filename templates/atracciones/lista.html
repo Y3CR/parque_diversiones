@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+{% block title %}Atracciones{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🎢 Atracciones</h1>
+    <div style="display:flex; gap:0.5rem;">
+        <a href="{% url 'atracciones:categorias' %}" class="btn btn-secondary">🏷️ Categorías</a>
+        <a href="{% url 'atracciones:crear' %}" class="btn btn-primary">+ Nueva atracción</a>
+    </div>
+</div>
+
+<div class="card">
+    <form method="get" style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+        <select name="categoria" style="padding:0.5rem; border:1px solid #ddd; border-radius:5px;">
+            <option value="">Todas las categorías</option>
+            {% for c in categorias %}
+                <option value="{{ c.pk }}" {% if categoria_filtro == c.pk|stringformat:"s" %}selected{% endif %}>
+                    {{ c.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+        <select name="estado" style="padding:0.5rem; border:1px solid #ddd; border-radius:5px;">
+            <option value="">Todos los estados</option>
+            {% for val, label in estados %}
+                <option value="{{ val }}" {% if estado_filtro == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-secondary">Filtrar</button>
+        <a href="{% url 'atracciones:lista' %}" class="btn btn-secondary">Limpiar</a>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Capacidad</th>
+                <th>Duración</th>
+                <th>Estado</th>
+                <th>Activa</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in atracciones %}
+            <tr>
+                <td><strong>{{ a.nombre }}</strong></td>
+                <td>{{ a.categoria.nombre|default:"—" }}</td>
+                <td>{{ a.capacidad_por_ciclo }} personas</td>
+                <td>{{ a.duracion_promedio }} min</td>
+                <td>
+                    <span class="badge
+                        {% if a.estado == 'abierta' %}badge-success
+                        {% elif a.estado == 'cerrada' %}badge-danger
+                        {% elif a.estado == 'mantenimiento' %}badge-warning
+                        {% else %}badge-secondary{% endif %}">
+                        {{ a.get_estado_display }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'atracciones:toggle' a.pk %}"
+                       style="text-decoration:none;"
+                       title="{% if a.activa %}Desactivar{% else %}Activar{% endif %}">
+                        {% if a.activa %}✅{% else %}❌{% endif %}
+                    </a>
+                </td>
+                <td style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                    <a href="{% url 'atracciones:editar' a.pk %}"
+                       class="btn btn-warning"
+                       style="padding:0.3rem 0.7rem; font-size:0.8rem;">Editar</a>
+                    <a href="{% url 'atracciones:estado' a.pk %}"
+                       class="btn btn-secondary"
+                       style="padding:0.3rem 0.7rem; font-size:0.8rem;">Estado</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align:center; color:#888; padding:2rem;">
+                    No hay atracciones registradas.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

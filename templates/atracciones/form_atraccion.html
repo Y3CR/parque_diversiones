@@ -1,0 +1,125 @@
+{% extends 'base/base.html' %}
+{% block title %}{% if object %}Editar{% else %}Nueva{% endif %} atracción{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{% if object %}✏️ Editar atracción{% else %}➕ Nueva atracción{% endif %}</h1>
+    <a href="{% url 'atracciones:lista' %}" class="btn btn-secondary">← Volver</a>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+
+    <div class="card">
+        <h2>Información general</h2>
+        <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" name="nombre" value="{{ object.nombre|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label>Descripción</label>
+            <textarea name="descripcion" rows="3">{{ object.descripcion|default:'' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Categoría</label>
+            <select name="categoria">
+                <option value="">Sin categoría</option>
+                {% for c in categorias %}
+                    <option value="{{ c.pk }}"
+                        {% if object.categoria_id == c.pk %}selected{% endif %}>
+                        {{ c.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Ubicación en el parque</label>
+            <input type="text" name="ubicacion" value="{{ object.ubicacion|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label>Imagen</label>
+            <input type="file" name="imagen" accept="image/*">
+            {% if object.imagen %}
+                <small style="color:#888;">Imagen actual: {{ object.imagen.name }}</small>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <div class="card">
+            <h2>Operación</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-group">
+                    <label>Capacidad por ciclo *</label>
+                    <input type="number" name="capacidad_por_ciclo"
+                           value="{{ object.capacidad_por_ciclo|default:10 }}" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Duración promedio (min) *</label>
+                    <input type="number" name="duracion_promedio"
+                           value="{{ object.duracion_promedio|default:5 }}" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Horario apertura</label>
+                    <input type="time" name="horario_apertura"
+                           value="{{ object.horario_apertura|default:'' }}">
+                </div>
+                <div class="form-group">
+                    <label>Horario cierre</label>
+                    <input type="time" name="horario_cierre"
+                           value="{{ object.horario_cierre|default:'' }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select name="estado">
+                    {% for val, label in estados %}
+                        <option value="{{ val }}"
+                            {% if object.estado == val %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                    <input type="checkbox" name="activa"
+                           {% if object.activa or not object %}checked{% endif %}
+                           style="width:auto;">
+                    Atracción activa
+                </label>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Restricciones</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-group">
+                    <label>Edad mínima (años)</label>
+                    <input type="number" name="edad_minima"
+                           value="{{ object.edad_minima|default:'' }}" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Estatura mínima (cm)</label>
+                    <input type="number" name="estatura_minima"
+                           value="{{ object.estatura_minima|default:'' }}" min="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Otras restricciones</label>
+                <textarea name="restricciones" rows="3"
+                          placeholder="Ej: No apto para embarazadas, condiciones cardíacas...">{{ object.restricciones|default:'' }}</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:flex; gap:0.75rem; margin-top:0.5rem;">
+    <button type="submit" class="btn btn-primary">
+        {% if object %}Guardar cambios{% else %}Crear atracción{% endif %}
+    </button>
+    <a href="{% url 'atracciones:lista' %}" class="btn btn-secondary">Cancelar</a>
+</div>
+</form>
+{% endblock %}

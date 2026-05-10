@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% block title %}Cambiar estado{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚙️ Cambiar estado: {{ atraccion.nombre }}</h1>
+    <a href="{% url 'atracciones:lista' %}" class="btn btn-secondary">← Volver</a>
+</div>
+
+<div class="card" style="max-width:480px;">
+    <p style="margin-bottom:1rem;">
+        Estado actual:
+        <span class="badge
+            {% if atraccion.estado == 'abierta' %}badge-success
+            {% elif atraccion.estado == 'cerrada' %}badge-danger
+            {% elif atraccion.estado == 'mantenimiento' %}badge-warning
+            {% else %}badge-secondary{% endif %}">
+            {{ atraccion.get_estado_display }}
+        </span>
+    </p>
+
+    <div class="alert alert-warning" style="margin-bottom:1rem;">
+        ⚠️ Si cambias a <strong>cerrada, mantenimiento o suspendida</strong>,
+        todos los turnos activos de esta atracción serán cancelados automáticamente.
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Nuevo estado</label>
+            <select name="estado">
+                {% for val, label in estados %}
+                    <option value="{{ val }}"
+                        {% if atraccion.estado == val %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="display:flex; gap:0.75rem;">
+            <button type="submit" class="btn btn-primary">Confirmar cambio</button>
+            <a href="{% url 'atracciones:lista' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
