@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
+
 
 ROL_CHOICES = [
     ('administrador', 'Administrador'),
@@ -8,6 +10,7 @@ ROL_CHOICES = [
     ('operador_alimentos', 'Operador de Alimentos'),
     ('soporte', 'Soporte'),
 ]
+
 
 class UsuarioInterno(AbstractUser):
     rol = models.CharField(max_length=30, choices=ROL_CHOICES, default='taquilla')
@@ -42,3 +45,32 @@ class Visitante(models.Model):
 
     def __str__(self):
         return f"{self.nombre} - {self.celular}"
+
+
+class PaseNitro(models.Model):
+    TIPO_CHOICES = [
+        ('diario', 'Diario'),
+        ('por_usos', 'Por cantidad de usos'),
+        ('por_atraccion', 'Por atracción'),
+    ]
+    visitante      = models.ForeignKey(Visitante, on_delete=models.CASCADE, related_name='pases_nitro')
+    tipo           = models.CharField(max_length=20, choices=TIPO_CHOICES, default='por_usos')
+    usos_totales   = models.PositiveIntegerField(default=3)
+    usos_restantes = models.PositiveIntegerField(default=3)
+    fecha_inicio   = models.DateField(default=timezone.now)
+    fecha_fin      = models.DateField(null=True, blank=True)
+    activo         = models.BooleanField(default=True)
+    creado_por     = models.CharField(max_length=50, default='taquilla')
+
+    def esta_vigente(self):
+        hoy = timezone.now().date()
+        if not self.activo:
+            return False
+        if self.usos_restantes <= 0:
+            return False
+        if self.fecha_fin and hoy > self.fecha_fin:
+            return False
+        return True
+
+    def __str__(self):
+        return f'Nitro {self.tipo} — {self.visitante} ({self.usos_restantes} usos)'

@@ -3,7 +3,11 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>🎢 {{ atraccion.nombre }}</h1>
+    <h1>🎢 {{ atraccion.nombre }}
+        {% if atraccion.acepta_nitro %}
+            <span class="badge badge-warning" style="font-size:0.6em;">⚡ Acepta Nitro</span>
+        {% endif %}
+    </h1>
     <a href="{% url 'turnos:panel_operador' %}" class="btn btn-secondary">← Volver</a>
 </div>
 
@@ -17,6 +21,13 @@
         <div class="kpi-icon">👥</div>
         <div class="kpi-value">{{ atraccion.capacidad_por_ciclo }}</div>
         <div class="kpi-label">Capacidad por ciclo</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-value">
+            {{ turnos|length }}
+        </div>
+        <div class="kpi-label">En cola</div>
     </div>
 </div>
 
@@ -35,9 +46,14 @@
         </thead>
         <tbody>
             {% for turno in turnos %}
-            <tr>
-                <td><strong>#{{ turno.numero }}</strong></td>
-                <td>{{ turno.visitante_nombre|default:"—" }}</td>
+            <tr {% if turno.prioridad == 1 %}style="background-color: #fff8e1; border-left: 4px solid #ffc107;"{% endif %}>
+                <td>
+                    <strong>#{{ turno.numero }}</strong>
+                    {% if turno.prioridad == 1 %}
+                        <span class="badge badge-warning">⚡</span>
+                    {% endif %}
+                </td>
+                <td>{{ turno.visitante.nombre|default:"—" }}</td>
                 <td>
                     {% if turno.estado == 'generado' %}
                         <span class="badge badge-info">Generado</span>
@@ -56,7 +72,7 @@
                         <span class="badge badge-secondary">Normal</span>
                     {% endif %}
                 </td>
-                <td style="font-size:0.8rem; color:#888;">{{ turno.hora_creacion|date:"H:i" }}</td>
+                <td style="font-size:0.8rem; color:#888;">{{ turno.fecha_creacion|date:"H:i" }}</td>
                 <td>
                     {% if turno.estado != 'llamado' %}
                     <form method="post" action="{% url 'turnos:llamar_turno' turno.pk %}" style="display:inline;">
@@ -74,7 +90,11 @@
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="6" style="text-align:center; color:#888;">No hay turnos en cola.</td></tr>
+            <tr>
+                <td colspan="6" style="text-align:center; color:#888; padding: 2rem;">
+                    No hay turnos en cola.
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>

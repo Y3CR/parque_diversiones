@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container mt-4" style="max-width:500px;">
+  <h3>⚡ Pase Nitro</h3>
+  <p class="text-muted">Con el Pase Nitro tu turno tiene prioridad en la cola de las atracciones que lo avalen.</p>
+
+  <div class="card mb-3 border-warning">
+    <div class="card-body">
+      <h5 class="card-title">⚡ Nitro Diario</h5>
+      <p class="card-text">3 usos en cualquier atracción durante el día de hoy.</p>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="tipo" value="por_usos">
+        <button type="submit" class="btn btn-warning w-100">Activar Pase Nitro</button>
+      </form>
+    </div>
+  </div>
+
+  <a href="{% url 'portal:atracciones' %}" class="btn btn-outline-secondary w-100">← Volver</a>
+</div>
+{% endblock %}

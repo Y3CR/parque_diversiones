@@ -37,6 +37,7 @@ class Atraccion(models.Model):
     activa = models.BooleanField(default=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
+    acepta_nitro = models.BooleanField(default=True, verbose_name='Acepta Pase Nitro')
 
     def __str__(self):
         return self.nombre
