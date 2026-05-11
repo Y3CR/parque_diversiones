@@ -185,7 +185,7 @@
         <a href="{% url 'usuarios:lista_usuarios' %}">👥 Usuarios</a>
         <span class="section-title">Catálogos</span>
         <a href="{% url 'atracciones:lista' %}">🎢 Atracciones</a>
-        <a href="{% url 'atracciones:categorias' %}">🏷️ Categorías</a> 
+        <a href="{% url 'atracciones:categorias' %}">🏷️ Categorías</a>
         <a href="{% url 'entradas:tipos' %}">🎫 Tipos de entrada</a>
         <a href="{% url 'entradas:precios' %}">💰 Precios</a>
         <a href="{% url 'entradas:promociones' %}">🏷️ Promociones</a>
@@ -205,7 +205,7 @@
         <span class="section-title">Mi atracción</span>
         <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>
         <a href="{% url 'turnos:panel_operador' %}">🎡 Panel de turnos</a>
-        <a href="{% url 'atracciones:cambiar_estado' %}">⚙️ Estado atracción</a>
+        <a href="{% url 'atracciones:lista' %}">⚙️ Atracciones</a>
     {% elif user.rol == 'operador_alimentos' %}
         <span class="section-title">Alimentos</span>
         <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>

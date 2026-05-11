@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div style="max-width:400px;margin:80px auto;text-align:center;">
+  <h2>🎢 Bienvenido al Parque</h2>
+  <p>Ingresa tu número de celular para tomar turnos.</p>
+  {% if messages %}
+    {% for msg in messages %}<div class="alert alert-warning">{{ msg }}</div>{% endfor %}
+  {% endif %}
+  <form method="post" style="margin-top:24px;">
+    {% csrf_token %}
+    <input type="tel" name="celular" placeholder="Ej: 3001234567"
+           class="form-control" style="margin-bottom:12px;" required>
+    <button type="submit" class="btn btn-primary w-100">Ingresar →</button>
+  </form>
+</div>
+{% endblock %}

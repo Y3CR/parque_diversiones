@@ -1,6 +1,10 @@
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-parque-diversiones-clave-temporal-2026'
@@ -87,3 +91,10 @@ AUTH_USER_MODEL = 'usuarios.UsuarioInterno'
 LOGIN_URL = '/usuarios/login/'
 LOGIN_REDIRECT_URL = '/usuarios/dashboard/'
 LOGOUT_REDIRECT_URL = '/usuarios/login/'
+
+
+
+
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID', '')
+TWILIO_AUTH_TOKEN  = os.getenv('TWILIO_AUTH_TOKEN', '')
+TWILIO_PHONE_FROM  = os.getenv('TWILIO_PHONE_FROM', '')

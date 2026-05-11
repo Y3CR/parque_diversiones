@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Hola 👋 {{ visitante.nombre }}</h3>
+    <div>
+      <a href="{% url 'portal:mis_turnos' %}" class="btn btn-outline-primary btn-sm">🎟 Mis Turnos</a>
+      <a href="{% url 'portal:salir' %}" class="btn btn-outline-secondary btn-sm">Salir</a>
+    </div>
+  </div>
+  <h4>Atracciones disponibles</h4>
+  <div class="row mt-3">
+    {% for a in atracciones %}
+    <div class="col-md-4 mb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ a.nombre }}</h5>
+          <p class="text-muted">{{ a.categoria }} | Cap: {{ a.capacidad }}</p>
+          <form method="post" action="{% url 'portal:tomar_turno' a.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm w-100">🎯 Tomar turno</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No hay atracciones disponibles en este momento.</p>
+    {% endfor %}
+  </div>
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} mt-3">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

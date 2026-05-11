@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+{% block title %}Panel Operador - Turnos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🎡 Panel de Turnos — Operador</h1>
+</div>
+
+{% if not data %}
+<div class="card">
+    <p style="color:#888; text-align:center;">No hay atracciones abiertas en este momento.</p>
+</div>
+{% else %}
+<div class="kpi-grid">
+    {% for item in data %}
+    <div class="kpi-card">
+        <div class="kpi-icon">🎢</div>
+        <div class="kpi-value">{{ item.en_fila }}</div>
+        <div class="kpi-label">{{ item.atraccion.nombre }}</div>
+        <a href="{% url 'turnos:gestionar_cola' item.atraccion.pk %}" 
+           class="btn btn-primary" style="margin-top:0.8rem; display:block;">
+            Gestionar cola
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

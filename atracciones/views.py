@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Atraccion, CategoriaAtraccion, ESTADO_ATRACCION
 from usuarios.decoradores import login_requerido, rol_requerido
+from usuarios.models import UsuarioInterno
 
 
 @login_requerido

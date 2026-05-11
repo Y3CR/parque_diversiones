@@ -43,7 +43,7 @@
             <a href="{% url 'entradas:lista_entradas' %}" class="btn btn-secondary">📋 Ver entradas</a>
         {% elif user.rol == 'operador_atraccion' %}
             <a href="{% url 'turnos:panel_operador' %}" class="btn btn-primary">🎡 Panel de turnos</a>
-            <a href="{% url 'atracciones:cambiar_estado' %}" class="btn btn-warning">⚙️ Estado atracción</a>
+            <a href="{% url 'atracciones:lista' %}" class="btn btn-warning">⚙️ Atracciones</a>
         {% elif user.rol == 'soporte' %}
             <a href="{% url 'usuarios:buscar_visitante' %}" class="btn btn-primary">🔍 Buscar visitante</a>
         {% endif %}

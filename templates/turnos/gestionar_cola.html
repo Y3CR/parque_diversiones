@@ -1,0 +1,82 @@
+{% extends 'base/base.html' %}
+{% block title %}Cola — {{ atraccion.nombre }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🎢 {{ atraccion.nombre }}</h1>
+    <a href="{% url 'turnos:panel_operador' %}" class="btn btn-secondary">← Volver</a>
+</div>
+
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-icon">⏳</div>
+        <div class="kpi-value">{{ turnos.count }}</div>
+        <div class="kpi-label">Turnos activos</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-value">{{ atraccion.capacidad_por_ciclo }}</div>
+        <div class="kpi-label">Capacidad por ciclo</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Cola actual</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Turno #</th>
+                <th>Visitante</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th>Hora generado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for turno in turnos %}
+            <tr>
+                <td><strong>#{{ turno.numero }}</strong></td>
+                <td>{{ turno.visitante_nombre|default:"—" }}</td>
+                <td>
+                    {% if turno.estado == 'generado' %}
+                        <span class="badge badge-info">Generado</span>
+                    {% elif turno.estado == 'en_espera' %}
+                        <span class="badge badge-warning">En espera</span>
+                    {% elif turno.estado == 'proximo' %}
+                        <span class="badge badge-warning">Próximo</span>
+                    {% elif turno.estado == 'llamado' %}
+                        <span class="badge badge-success">Llamado</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if turno.prioridad == 1 %}
+                        <span class="badge badge-warning">⚡ Nitro</span>
+                    {% else %}
+                        <span class="badge badge-secondary">Normal</span>
+                    {% endif %}
+                </td>
+                <td style="font-size:0.8rem; color:#888;">{{ turno.hora_creacion|date:"H:i" }}</td>
+                <td>
+                    {% if turno.estado != 'llamado' %}
+                    <form method="post" action="{% url 'turnos:llamar_turno' turno.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">📣 Llamar</button>
+                    </form>
+                    {% else %}
+                    <form method="post" action="{% url 'turnos:cambiar_estado' turno.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" name="estado" value="usado" class="btn btn-primary">✅ Usado</button>
+                        <button type="submit" name="estado" value="vencido" class="btn btn-warning">⏰ Vencido</button>
+                        <button type="submit" name="estado" value="cancelado" class="btn btn-danger">❌ Cancelar</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center; color:#888;">No hay turnos en cola.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

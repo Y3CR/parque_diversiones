@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db.models import Q
 from .models import TipoEntrada, Precio, Promocion, Entrada, AuditoriaAnulacion
 from usuarios.models import Visitante
+from usuarios.models import UsuarioInterno
 from usuarios.decoradores import login_requerido, rol_requerido
 import uuid
 

@@ -1,6 +1,7 @@
 from django.db import models
 from usuarios.models import Visitante
 from atracciones.models import Atraccion
+from django.utils import timezone
 
 ESTADO_TURNO = [
     ('generado', 'Generado'),
@@ -35,6 +36,10 @@ class Turno(models.Model):
     hora_llamado = models.DateTimeField(blank=True, null=True)
     hora_vencimiento = models.DateTimeField(blank=True, null=True)
     hora_uso = models.DateTimeField(blank=True, null=True)
+    
+
+    fecha_creacion = models.DateTimeField(default=timezone.now)
+    #fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('atraccion', 'numero')
@@ -49,3 +54,14 @@ class Turno(models.Model):
             estado__in=['generado', 'en_espera'],
             numero__lt=self.numero
         ).count() + 1
+        
+        
+class ConfiguracionTurnos(models.Model):
+    max_turnos_activos_por_visitante = models.PositiveIntegerField(default=2)
+    ventana_llamado_minutos = models.PositiveIntegerField(default=10)
+
+    class Meta:
+        verbose_name = 'Configuración de turnos'
+
+    def __str__(self):
+        return f'Config turnos — max:{self.max_turnos_activos_por_visitante} ventana:{self.ventana_llamado_minutos}min'
