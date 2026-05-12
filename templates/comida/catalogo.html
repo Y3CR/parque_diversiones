@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>🍔 Combos disponibles</h3>
+    <div>
+      <a href="{% url 'comida:mis_pedidos' %}" class="btn btn-outline-primary btn-sm">📋 Mis pedidos</a>
+      <a href="{% url 'portal:atracciones' %}" class="btn btn-outline-secondary btn-sm">← Atracciones</a>
+    </div>
+  </div>
+  <div class="row">
+    {% for combo in combos %}
+    <div class="col-md-4 mb-3">
+      <div class="card h-100">
+        {% if combo.imagen %}
+          <img src="{{ combo.imagen.url }}" class="card-img-top" style="height:180px;object-fit:cover;">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ combo.nombre }}</h5>
+          <p class="text-muted small">{{ combo.descripcion }}</p>
+          <p class="fw-bold text-success">${{ combo.precio }}</p>
+          <a href="{% url 'comida:hacer_pedido' combo.pk %}" class="btn btn-warning w-100">🛒 Pedir</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No hay combos disponibles en este momento.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

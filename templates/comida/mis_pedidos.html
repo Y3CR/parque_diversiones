@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>📋 Mis pedidos — {{ visitante.nombre }}</h3>
+  <a href="{% url 'comida:catalogo' %}" class="btn btn-warning btn-sm mb-3">🍔 Ver combos</a>
+  {% if pedidos %}
+  <table class="table table-bordered">
+    <thead><tr><th>Código</th><th>Detalle</th><th>Total</th><th>Estado</th></tr></thead>
+    <tbody>
+      {% for p in pedidos %}
+      <tr>
+        <td><strong>{{ p.codigo }}</strong></td>
+        <td>
+          {% for item in p.items.all %}
+            {{ item.cantidad }}x {{ item.combo.nombre }}<br>
+          {% endfor %}
+        </td>
+        <td>${{ p.total }}</td>
+        <td>
+          {% if p.estado == 'recibido' %}
+            <span class="badge bg-secondary">📥 Recibido</span>
+          {% elif p.estado == 'preparacion' %}
+            <span class="badge bg-info text-dark">👨‍🍳 En preparación</span>
+          {% elif p.estado == 'listo' %}
+            <span class="badge bg-success">✅ ¡Listo! Ve a recogerlo</span>
+          {% elif p.estado == 'entregado' %}
+            <span class="badge bg-dark">📦 Entregado</span>
+          {% elif p.estado == 'cancelado' %}
+            <span class="badge bg-danger">❌ Cancelado</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No tienes pedidos aún. <a href="{% url 'comida:catalogo' %}">Ver combos →</a></p>
+  {% endif %}
+</div>
+{% endblock %}

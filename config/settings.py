@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'notificaciones',
     'reportes',
     'portal',
+    'comida'
 ]
 
 MIDDLEWARE = [

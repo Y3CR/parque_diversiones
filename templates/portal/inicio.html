@@ -2,15 +2,27 @@
 {% block content %}
 <div style="max-width:400px;margin:80px auto;text-align:center;">
   <h2>🎢 Bienvenido al Parque</h2>
-  <p>Ingresa tu número de celular para tomar turnos.</p>
+  <p>Ingresa tu número de celular para tomar turnos y pedir combos.</p>
+
   {% if messages %}
-    {% for msg in messages %}<div class="alert alert-warning">{{ msg }}</div>{% endfor %}
+    {% for msg in messages %}
+      <div class="alert alert-warning">{{ msg }}</div>
+    {% endfor %}
   {% endif %}
+
   <form method="post" style="margin-top:24px;">
     {% csrf_token %}
     <input type="tel" name="celular" placeholder="Ej: 3001234567"
            class="form-control" style="margin-bottom:12px;" required>
     <button type="submit" class="btn btn-primary w-100">Ingresar →</button>
   </form>
+
+  <!-- Enlace discreto para personal del parque -->
+  <div style="margin-top:60px; padding-top:16px; border-top:1px solid #dee2e6;">
+    <a href="{% url 'usuarios:login' %}"
+       style="font-size:0.8rem; color:#adb5bd; text-decoration:none;">
+      ¿Eres del personal? Inicia sesión aquí
+    </a>
+  </div>
 </div>
 {% endblock %}

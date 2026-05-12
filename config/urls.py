@@ -13,4 +13,5 @@ urlpatterns = [
     #path('comprar/',    include(('entradas.urls','entradas')namespace='entradas_web')),
     path('',            include('portal.urls')),
     path('portal/', include('portal.urls')),
+    path('comida/', include('comida.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
