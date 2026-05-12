@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>🎢 Reporte de Turnos</h3>
+    <div>
+      <a href="{% url 'reportes:export_turnos' %}" class="btn btn-outline-secondary btn-sm">📥 Exportar CSV</a>
+      <a href="{% url 'reportes:dashboard' %}" class="btn btn-outline-primary btn-sm">← Dashboard</a>
+    </div>
+  </div>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr><th>Atracción</th><th>Estado</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+      {% for t in turnos %}
+      <tr>
+        <td>{{ t.atraccion__nombre }}</td>
+        <td>{{ t.estado }}</td>
+        <td><strong>{{ t.total }}</strong></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3" class="text-muted text-center">Sin datos.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -14,4 +14,5 @@ urlpatterns = [
     path('',            include('portal.urls')),
     path('portal/', include('portal.urls')),
     path('comida/', include('comida.urls')),
+    path('reportes/', include('reportes.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

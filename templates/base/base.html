@@ -194,7 +194,9 @@
         <a href="{% url 'entradas:lista_entradas' %}">📋 Entradas</a>
         <span class="section-title">Reportes</span>
         <a href="{% url 'reportes:dashboard' %}">📊 Dashboard</a>
-        <a href="{% url 'reportes:exportar' %}">📥 Exportar</a>
+       <!-- <a href="{% url 'reportes:export_turnos' %}">📥 CSV Turnos</a>
+<a href="{% url 'reportes:export_comida' %}">📥 CSV Comida</a> -->
+        <a href="{% url 'reportes:dashboard' %}">📥 Exportar reportes</a>
     {% elif user.rol == 'taquilla' %}
         <span class="section-title">Taquilla</span>
         <a href="{% url 'usuarios:dashboard' %}">🏠 Dashboard</a>

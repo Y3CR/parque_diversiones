@@ -32,20 +32,31 @@
 <div class="card">
     <h2>Acceso rápido</h2>
     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem;">
+
         {% if user.rol == 'administrador' or user.is_superuser %}
             <a href="{% url 'atracciones:lista' %}" class="btn btn-primary">🎢 Atracciones</a>
             <a href="{% url 'usuarios:lista_usuarios' %}" class="btn btn-secondary">👥 Usuarios</a>
             <a href="{% url 'entradas:tipos' %}" class="btn btn-secondary">🎫 Tipos de entrada</a>
+            <a href="{% url 'comida:panel_alimentos' %}" class="btn btn-warning">🍔 Pedidos comida</a>
             <a href="{% url 'reportes:dashboard' %}" class="btn btn-success">📊 Reportes</a>
+
         {% elif user.rol == 'taquilla' %}
             <a href="{% url 'entradas:vender' %}" class="btn btn-primary">🎫 Vender entrada</a>
             <a href="{% url 'entradas:validar' %}" class="btn btn-success">✅ Validar entrada</a>
             <a href="{% url 'entradas:lista_entradas' %}" class="btn btn-secondary">📋 Ver entradas</a>
+            <a href="{% url 'portal:inicio' %}" class="btn btn-warning">⚡ Asignar Nitro</a>
+
         {% elif user.rol == 'operador_atraccion' %}
             <a href="{% url 'turnos:panel_operador' %}" class="btn btn-primary">🎡 Panel de turnos</a>
             <a href="{% url 'atracciones:lista' %}" class="btn btn-warning">⚙️ Atracciones</a>
+
+        {% elif user.rol == 'operador_alimentos' %}
+            <a href="{% url 'comida:panel_alimentos' %}" class="btn btn-primary">🍔 Panel de pedidos</a>
+
         {% elif user.rol == 'soporte' %}
             <a href="{% url 'usuarios:buscar_visitante' %}" class="btn btn-primary">🔍 Buscar visitante</a>
+            <a href="{% url 'turnos:panel_admin' %}" class="btn btn-secondary">🎢 Ver turnos</a>
+
         {% endif %}
     </div>
 </div>

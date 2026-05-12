@@ -1,11 +1,12 @@
 from django.urls import path
-from django.http import HttpResponse
+from . import views
 
 app_name = 'reportes'
 
-def temp(r): return HttpResponse('Próximamente - Reportes')
-
 urlpatterns = [
-    path('dashboard/', temp, name='dashboard'),
-    path('exportar/',  temp, name='exportar'),
+    path('',               views.dashboard,          name='dashboard'),
+    path('turnos/',        views.reporte_turnos,     name='turnos'),
+    path('comida/',        views.reporte_comida,     name='comida'),
+    path('export/turnos/', views.exportar_turnos_csv, name='export_turnos'),
+    path('export/comida/', views.exportar_comida_csv, name='export_comida'),
 ]

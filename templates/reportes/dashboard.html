@@ -1,0 +1,112 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📊 Panel Administrativo</h2>
+    <small class="text-muted">Hoy: {{ hoy }}</small>
+  </div>
+
+  <!-- KPIs -->
+  <div class="row mb-4">
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center border-primary">
+        <div class="card-body">
+          <div style="font-size:2rem;">👥</div>
+          <h3 class="card-title">{{ visitantes_hoy }}</h3>
+          <p class="card-text text-muted small">Visitantes hoy</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center border-warning">
+        <div class="card-body">
+          <div style="font-size:2rem;">⏳</div>
+          <h3 class="card-title">{{ turnos_activos }}</h3>
+          <p class="card-text text-muted small">Turnos activos</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center border-success">
+        <div class="card-body">
+          <div style="font-size:2rem;">🍔</div>
+          <h3 class="card-title">{{ pedidos_activos }}</h3>
+          <p class="card-text text-muted small">Pedidos en curso</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3">
+      <div class="card text-center border-warning">
+        <div class="card-body">
+          <div style="font-size:2rem;">⚡</div>
+          <h3 class="card-title">{{ nitros_activos }}</h3>
+          <p class="card-text text-muted small">Pases Nitro activos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Cola por atracción -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">🎢 Cola por atracción</h5>
+          <p class="text-muted small">
+            Abiertas: <strong>{{ atracciones_abiertas }}</strong> |
+            Cerradas: <strong>{{ atracciones_cerradas }}</strong>
+          </p>
+          <table class="table table-sm">
+            <thead><tr><th>Atracción</th><th>En cola</th></tr></thead>
+            <tbody>
+              {% for a in cola_por_atraccion %}
+              <tr>
+                <td>{{ a.atraccion__nombre }}</td>
+                <td><span class="badge bg-warning text-dark">{{ a.total }}</span></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="2" class="text-muted">Sin turnos activos.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pedidos por estado -->
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">🍔 Pedidos por estado</h5>
+          <table class="table table-sm">
+            <thead><tr><th>Estado</th><th>Total</th></tr></thead>
+            <tbody>
+              {% for p in pedidos_por_estado %}
+              <tr>
+                <td>{{ p.estado }}</td>
+                <td>{{ p.total }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="2" class="text-muted">Sin pedidos.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="card mt-2">
+    <div class="card-body">
+      <h5 class="card-title">📥 Reportes y exportaciones</h5>
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <a href="{% url 'reportes:turnos' %}" class="btn btn-outline-primary">🎢 Reporte turnos</a>
+        <a href="{% url 'reportes:comida' %}" class="btn btn-outline-success">🍔 Reporte comida</a>
+        <a href="{% url 'reportes:export_turnos' %}" class="btn btn-outline-secondary">📥 CSV Turnos</a>
+        <a href="{% url 'reportes:export_comida' %}" class="btn btn-outline-secondary">📥 CSV Comida</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
